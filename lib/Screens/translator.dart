@@ -13,10 +13,18 @@ class _TranslationScreenState extends State<TranslationScreen> {
 
   void _translate() async {
     final translator = GoogleTranslator();
-    final translation = await translator.translate(_controller.text, to: _selectedLanguage);
+    if( _controller.text == ""){
+     //senda  floating scaffold
+     
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please enter some text')));
+    }
+    else{
+      final translation = await translator.translate(_controller.text, to: _selectedLanguage);
     setState(() {
       _translatedText = translation.text;
     });
+    }
+    
   }
 
   Widget _buildNeumorphicContainer(Widget child, {Color? color}) {
@@ -44,6 +52,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

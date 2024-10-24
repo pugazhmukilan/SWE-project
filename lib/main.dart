@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:virtual/Screens/Login/LoginScreen.dart';
+import 'package:virtual/Screens/Login/SignupScreen.dart';
 
 void main() {
+  
   runApp(const MyApp());
 }
 
@@ -11,6 +12,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Loginscreen(),
+      home: SignupScreen(),
     );
   }
 }

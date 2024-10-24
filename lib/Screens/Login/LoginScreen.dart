@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:virtual/Screens/Login/SignupScreen.dart';
 import 'package:virtual/Screens/translator.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -85,77 +88,29 @@ class _LoginscreenState extends State<Loginscreen> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Center(
+                                child: Text(
+                                  "Login Page",
+                                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.w500, color: Colors.black),
+                                ),
+                              ),
+                              SizedBox(height: 40),
                               _buildTextField(
                                 label: 'Username',
                                 controller: usernametextcontroller,
                                 hint: 'Enter your username',
                                 obscureText: false,
-                              suffixIcon: IconButton(
-                                  icon: Icon(
-                                     Icons.star ,
-                                    color: Colors.green,
+                                inputFormatters: [VarcharTextInputFormatter()],
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                       Icons.star ,
+                                      color: Colors.green,
+                                    ),
+                                    onPressed: () {
+                                      
+                                    },
                                   ),
-                                  onPressed: () {
-                                    
-                                  },
-                                ),
-                               ),
-
-  //                             Column(
-  //   crossAxisAlignment: CrossAxisAlignment.start,
-  //   children: [
-  //     Padding(
-  //       padding: const EdgeInsets.only(top: 3.0, left: 10.0, right: 5.0),
-  //       child: Text(
-  //         "Username",
-  //         style: TextStyle(
-  //           fontFamily: 'Poppins',
-  //           fontWeight: FontWeight.w300,
-  //           fontSize: 14,
-  //           color: Colors.black,
-  //         ),
-  //       ),
-  //     ),
-  //     Padding(
-  //       padding: const EdgeInsets.only(top: 5, left: 10.0, right: 5.0),
-  //       child: TextField(
-  //         cursorColor: Colors.green,
-  //         controller: usernametextcontroller,
-  //         obscureText: false,
-  //         decoration: InputDecoration(
-  //           contentPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-  //           isDense: true,  // This ensures the TextFields are the same size
-  //           enabledBorder: OutlineInputBorder(
-  //             borderRadius: BorderRadius.circular(14),
-  //             borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
-  //           ),
-  //           focusedBorder: OutlineInputBorder(
-  //             borderRadius: BorderRadius.circular(14),
-  //             borderSide: const BorderSide(color: Colors.green),
-  //           ),
-  //           hintText: "Username",
-  //           hintStyle: TextStyle(
-  //             fontFamily: 'Poppins',
-  //             fontWeight: FontWeight.w300,
-  //             fontSize: 14,
-  //             color: Colors.grey,
-  //           ),
-  //           suffixIcon:IconButton(
-  //                                 icon: Icon(
-  //                                   _obscureText ? Icons.visibility_off : Icons.visibility,
-  //                                   color: Colors.green,
-  //                                 ), onPressed: () {  },
-  //         ),
-  //         style: TextStyle(
-  //           fontFamily: 'Poppins',
-  //           fontWeight: FontWeight.w500,
-  //           fontSize: 14,
-  //           color: Colors.black,
-  //         ),
-  //       ),
-  //     ),
-  //   ],
-  // ),
+                              ),
                               const SizedBox(height: 20), // Add spacing between fields
                               _buildTextField(
                                 label: 'Password',
@@ -192,6 +147,42 @@ class _LoginscreenState extends State<Loginscreen> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16,
                                       color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => SignupScreen()),
+                                    );
+                                  },
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                      ),
+                                      children: [
+                                        TextSpan(text: 'Don\'t have an account? '),
+                                        TextSpan(
+                                          text: 'Signup',
+                                          style: TextStyle(
+                                            color: Colors.blue, // Change "Signup" color to blue
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => SignupScreen()),
+                                              );
+                                            },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -234,13 +225,16 @@ class _LoginscreenState extends State<Loginscreen> {
         MaterialPageRoute(builder: (context) => TranslationScreen()),
       );
     }
-  }}
+  }
+}
+
 Widget _buildTextField({
   required String label,
   required TextEditingController controller,
   required String hint,
   required bool obscureText,
   Widget? suffixIcon,
+  List<TextInputFormatter>? inputFormatters, // Added this parameter
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,6 +257,7 @@ Widget _buildTextField({
           cursorColor: Colors.green,
           controller: controller,
           obscureText: obscureText,
+          inputFormatters: inputFormatters, // Apply input formatters
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
             isDense: true,  // This ensures the TextFields are the same size
@@ -293,4 +288,16 @@ Widget _buildTextField({
       ),
     ],
   );
+}
+class VarcharTextInputFormatter extends TextInputFormatter {
+  static final _varcharRegex = RegExp(r'^[\w\s\.]*$');
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (_varcharRegex.hasMatch(newValue.text)) {
+      return newValue;
+    }
+    return oldValue;
+  }
 }
